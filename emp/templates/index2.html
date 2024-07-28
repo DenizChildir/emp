@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Client</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/week">Week Overview</a></li>
+        <li><a href="/email">Email</a></li>
+        <li><a href="/messages">SMS</a></li>
+    </ul>
+</nav>
+    <h1>Email Client</h1>
+    <h2>Send Email to dchildir@gmail.com, appends at bottom</h2>
+    <h2>Last 5 Emails</h2>
+    <div id="email-list" hx-get="/emails" hx-trigger="load">
+        Loading emails...
+    </div>
+
+    <h2>Send Email</h2>
+    <form hx-post="/send" hx-swap="outerHTML">
+        <input type="email" name="to" placeholder="To" required><br>
+        <input type="text" name="subject" placeholder="Subject" required><br>
+        <textarea name="body" placeholder="Message" required></textarea><br>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .email {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .email-body {
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 5px;
+    }
+
+    button {
+        width: 100px;
+    }
+    nav {
+        background-color: #444;
+        padding: 0.5rem;
+    }
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+    nav ul li {
+        margin: 0 10px;
+    }
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    nav ul li a:hover {
+        background-color: #555;
+    }
+</style>

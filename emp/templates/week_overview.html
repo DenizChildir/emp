@@ -1,0 +1,147 @@
+<!-- templates/week_overview.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week Overview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e6f3ff;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .actions {
+            text-align: center;
+        }
+        .actions a {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .actions a:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/week">Week Overview</a></li>
+        <li><a href="/email">Email</a></li>
+        <li><a href="/messages">SMS</a></li>
+    </ul>
+</nav>
+<h1>Week Overview for {{.Employee.FullName}}</h1>
+<h2>Week of {{.WeekStart.Format "January 2, 2006"}}</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Meal Time</th>
+        <th>Shift Hours</th>
+        <th>Customer ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range $i := iterate 0 6}}
+    {{$date := $.WeekStart.AddDate 0 0 $i}}
+    {{$dateStr := $date.Format "2006-01-02"}}
+    {{$workday := index $.WorkdayMap $dateStr}}
+    <tr>
+        <td>{{$date.Format "Mon, Jan 2"}}</td>
+        <td>{{if $workday}}{{$workday.StartTime}}{{end}}</td>
+        <td>{{if $workday}}{{$workday.EndTime}}{{end}}</td>
+        <td>{{if $workday}}{{$workday.StartMealTime}} - {{$workday.EndMealTime}}{{end}}</td>
+        <td>{{if $workday}}{{printf "%.2f" $workday.ShiftHours}}{{end}}</td>
+        <td>{{if $workday}}{{$workday.CustomerID}}{{end}}</td>
+        <td class="actions">
+            <a href="/workdays/{{$.Employee.ID}}/{{$dateStr}}">
+                {{if $workday}}Edit{{else}}Add{{end}}
+            </a>
+        </td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+<a href="/employees" class="back-link">Back to Employees</a>
+</body>
+</html>

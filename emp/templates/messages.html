@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Messages</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <nav>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/employees">Employees</a></li>
+            <li><a href="/customers">Customers</a></li>
+            <li><a href="/week">Week Overview</a></li>
+            <li><a href="/email">Email</a></li>
+            <li><a href="/messages">SMS</a></li>
+        </ul>
+    </nav>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .message {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .message p {
+            margin: 5px 0;
+        }
+        .from { color: #2980b9; }
+        .to { color: #16a085; }
+        .text { font-weight: bold; }
+
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="messages-container" hx-get="/messages" hx-trigger="every 1s">
+    <h1>SMS Messages</h1>
+    {{range .Messages}}
+    <div class="message">
+        <p><span class="from">From:</span> {{.From}}</p>
+        <p><span class="to">To:</span> {{.To}}</p>
+        <p><span class="text">Message:</span> {{.Message}}</p>
+    </div>
+    {{end}}
+</div>
+</body>
+</html>

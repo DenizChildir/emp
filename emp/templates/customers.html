@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .customer-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .customer-card:hover {
+            transform: translateY(-5px);
+        }
+        .customer-card h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .customer-card p {
+            margin: 5px 0;
+        }
+        .customer-card .label {
+            font-weight: bold;
+            color: #555;
+        }
+        .duty-lunch {
+            color: green;
+        }
+        .no-duty-lunch {
+            color: red;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/week">Week Overview</a></li>
+        <li><a href="/email">Email</a></li>
+        <li><a href="/messages">SMS</a></li>
+    </ul>
+</nav>
+
+<h1>{{.Title}}</h1>
+<a href="/customers/new">new customer</a>
+<div class="customer-grid">
+    {{range .Customers}}
+    <div class="customer-card">
+        <h2>{{.FullName}}</h2>
+        <p><span class="label">ID:</span> {{.ID}}</p>
+        <p><span class="label">Company:</span> {{.Company}}</p>
+        <p><span class="label">Manager Email:</span> {{.ManagerEmail}}</p>
+        <p><span class="label">CC Email:</span> {{.CCEmail}}</p>
+        <p><span class="label">Duty Lunch:</span>
+            {{if .DutyLunch}}
+            <span class="duty-lunch">Yes</span>
+            {{else}}
+            <span class="no-duty-lunch">No</span>
+            {{end}}
+        </p>
+        <p>
+            <a href="/customers/{{.ID}}/edit">Edit</a>
+            <button hx-delete="/customers/{{.ID}}" hx-confirm="Are you sure you want to delete this customer?">Delete</button>
+        </p>
+    </div>
+    {{end}}
+</div>
+</body>
+</html>
+
+<script src="https://unpkg.com/htmx.org@1.7.0"></script>

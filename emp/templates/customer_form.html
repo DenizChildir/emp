@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-top: 5px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/week">Week Overview</a></li>
+        <li><a href="/email">Email</a></li>
+        <li><a href="/messages">SMS</a></li>
+    </ul>
+</nav>
+<h1>{{.Title}}</h1>
+<form action="{{if .Customer}}/customers/{{.Customer.ID}}{{else}}/customers{{end}}" method="POST">
+    <div>
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" value="{{if .Customer}}{{.Customer.FullName}}{{end}}" required>
+    </div>
+
+    <div>
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" value="{{if .Customer}}{{.Customer.Company}}{{end}}" required>
+    </div>
+
+    <div>
+        <label for="managerEmail">Manager Email:</label>
+        <input type="email" id="managerEmail" name="managerEmail" value="{{if .Customer}}{{.Customer.ManagerEmail}}{{end}}" required>
+    </div>
+
+    <div>
+        <label for="ccEmail">CC Email:</label>
+        <input type="email" id="ccEmail" name="ccEmail" value="{{if .Customer}}{{.Customer.CCEmail}}{{end}}">
+    </div>
+
+    <div>
+        <label for="dutyLunch">
+            <input type="checkbox" id="dutyLunch" name="dutyLunch" {{if .Customer}}{{if .Customer.DutyLunch}}checked{{end}}{{end}}>
+            Duty Lunch
+        </label>
+    </div>
+
+    <button type="submit">{{if .Customer}}Update{{else}}Create{{end}} Customer</button>
+</form>
+<a href="/customers" class="back-link">Back to Customers</a>
+</body>
+</html>

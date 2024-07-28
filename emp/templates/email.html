@@ -1,0 +1,48 @@
+<div id="email-list">
+    {{range .Emails}}
+    <div class="email">
+        <h3>{{.Subject}}</h3>
+        <p>From: {{.From}}</p>
+        <p>Date: {{.Date}}</p>
+        <div class="email-body">{{.Body}}</div>
+    </div>
+    {{end}}
+</div>
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .email {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .email-body {
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 5px;
+    }
+
+    button {
+        width: 100px;
+    }
+
+</style>

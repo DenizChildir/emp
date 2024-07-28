@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:15="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{if .Day.ID}}Edit{{else}}New{{end}} Workday</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="date"],
+        input[type="time"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        #loadingIndicator, #successMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        #loadingIndicator {
+            background-color: #f0f0f0;
+        }
+
+        #successMessage {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/employees">Employees</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/week">Week Overview</a></li>
+        <li><a href="/email">Email</a></li>
+        <li><a href="/messages">SMS</a></li>
+    </ul>
+</nav>
+<p>Debug: Date received: {{if .Day.Date.IsZero}}Zero date{{else}}Year: {{.Day.Date.Year}}, Month: {{.Day.Date.Month}}, Day: {{.Day.Date.Day}}{{end}}</p>
+<h1>{{if .Day.ID}}Edit{{else}}New{{end}} Workday</h1>
+<form action="/workdays/{{.Day.EmployeeID}}/{{.Day.Date.Format "2006-01-02"}}" method="POST">
+<div>
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" value="{{.Day.Date.Format "2006-01-02"}}" required>
+</div>
+<p id="debugSelectedDate">Selected Date: None</p>
+
+
+<div>
+    <label for="startTime">Start Time:</label>
+    <input type="time" id="startTime" name="startTime" value="{{.Day.StartTime}}" required>
+</div>
+<div>
+    <label for="endTime">End Time:</label>
+    <input type="time" id="endTime" name="endTime" value="{{.Day.EndTime}}" required>
+</div>
+<div>
+    <label for="startMealTime">Start Meal Time:</label>
+    <input type="time" id="startMealTime" name="startMealTime" value="{{.Day.StartMealTime}}" required>
+</div>
+<div>
+    <label for="endMealTime">End Meal Time:</label>
+    <input type="time" id="endMealTime" name="endMealTime" value="{{.Day.EndMealTime}}" required>
+</div>
+<div>
+    <label for="customerId">Customer:</label>
+    <select id="customerId" name="customerId" required>
+        <option value="">Select a customer</option>
+        {{range .Customers}}
+        <option value="{{.ID}}" {{if eq .ID $.Day.CustomerID}}selected{{end}}>{{.Company}}</option>
+        {{end}}
+    </select>
+</div>
+<button type="submit">{{if .Day.ID}}Update{{else}}Create{{end}} Workday</button>
+
+<div id="loadingIndicator" style="display: none;">
+    <p>Submitting...</p>
+</div>
+<div id="successMessage" style="display: none;">
+    <p>Workday successfully updated!</p>
+</div>
+
+
+</form>
+<a href="/week-overview/{{.Day.EmployeeID}}" class="back-link">Back to Week Overview</a>
+</body>
+</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dateInput = document.getElementById('date');
+        var debugParagraph = document.getElementById('debugSelectedDate');
+        var form = document.querySelector('form');
+        var loadingIndicator = document.getElementById('loadingIndicator');
+        var successMessage = document.getElementById('successMessage');
+
+        function updateDebugDate() {
+            var selectedDate = dateInput.value;
+            debugParagraph.textContent = 'Selected Date: ' + (selectedDate || 'None');
+            console.log('Selected Date:', selectedDate);
+        }
+
+        dateInput.addEventListener('change', updateDebugDate);
+
+        // Call once to set initial value
+        updateDebugDate();
+
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+
+            var formData = new FormData(form);
+            var urlEncodedData = new URLSearchParams(formData).toString();
+
+            console.log('Form data being sent:');
+            console.log(urlEncodedData);
+
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+
+            // Hide success message if it was previously shown
+            successMessage.style.display = 'none';
+
+            // Send the form data
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: urlEncodedData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Server response:', data);
+                    // Hide loading indicator
+                    loadingIndicator.style.display = 'none';
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    // Optional: Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/week-overview/{{.Day.EmployeeID}}';
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Hide loading indicator
+                    loadingIndicator.style.display = 'none';
+                    // Show error message
+                    alert('An error occurred. Please try again.');
+                });
+        });
+    });
+</script>

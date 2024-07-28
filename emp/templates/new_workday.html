@@ -1,0 +1,59 @@
+<!-- templates/new_workday.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Workday Entry</title>
+    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
+</head>
+<body>
+
+<h1>New Workday Entry</h1>
+<form hx-post="/workdays/create" hx-swap="outerHTML">
+    <div>
+        <label for="employeeId">Employee:</label>
+        <select name="employeeId" id="employeeId" required>
+            <option value="">Select an employee</option>
+            {{ range .Employees }}
+            <option value="{{ .ID }}">{{ .FullName }}</option>
+            {{ end }}
+        </select>
+    </div>
+    <div>
+        <label for="date">Date:</label>
+        <input type="date" name="date" id="date" value="{{ .Today }}" required>
+    </div>
+    <div>
+        <label>Start Time:</label>
+        <input type="number" name="startTimeHour" min="0" max="23" required> :
+        <input type="number" name="startTimeMinute" min="0" max="59" required>
+    </div>
+    <div>
+        <label>Start Meal Time:</label>
+        <input type="number" name="startMealTimeHour" min="0" max="23" required> :
+        <input type="number" name="startMealTimeMinute" min="0" max="59" required>
+    </div>
+    <div>
+        <label>End Meal Time:</label>
+        <input type="number" name="endMealTimeHour" min="0" max="23" required> :
+        <input type="number" name="endMealTimeMinute" min="0" max="59" required>
+    </div>
+    <div>
+        <label>End Time:</label>
+        <input type="number" name="endTimeHour" min="0" max="23" required> :
+        <input type="number" name="endTimeMinute" min="0" max="59" required>
+    </div>
+    <div>
+        <label for="customerId">Customer:</label>
+        <select name="customerId" id="customerId" required>
+            <option value="">Select a customer</option>
+            {{ range .Customers }}
+            <option value="{{ .ID }}">{{ .Company }}</option>
+            {{ end }}
+        </select>
+    </div>
+    <button type="submit">Create Workday Entry</button>
+</form>
+</body>
+</html>

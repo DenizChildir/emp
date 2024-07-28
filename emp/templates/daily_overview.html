@@ -1,0 +1,53 @@
+<!-- templates/daily_overview.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Overview</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<h1>Daily Overview for {{.Date.Format "January 2, 2006"}}</h1>
+
+<form hx-get="/daily-overview" hx-target="body">
+    <label for="date">Select Date:</label>
+    <input type="date" id="date" name="date" value="{{.Date.Format "2006-01-02"}}" hx-trigger="change">
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Employee</th>
+        <th>Customer</th>
+        <th>Start Time</th>
+        <th>Meal Time</th>
+        <th>End Time</th>
+        <th>Shift Hours</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Overview}}
+    <tr>
+        <td>{{.EmployeeName}}</td>
+        <td>{{.CustomerName}}</td>
+        <td>{{.StartTime.Format "15:04"}}</td>
+        <td>{{.MealTime.Format "15:04"}}</td>
+        <td>{{.EndTime.Format "15:04"}}</td>
+        <td>{{printf "%.2f" .ShiftHours}}</td>
+        <td>
+            <a href="/workdays/{{.EmployeeID}}/{{.Date.Format "2006-01-02"}}">Edit</a>
+        </td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+
+<h2>Summary</h2>
+<p>Total Employees Working: {{len .Overview}}</p>
+<p>Total Hours Worked: {{printf "%.2f" (sum .Overview "ShiftHours")}} hours</p>
+
+<a href="/">Back to Home</a>
+</body>
+</html>

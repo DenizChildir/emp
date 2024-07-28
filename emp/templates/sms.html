@@ -1,0 +1,50 @@
+<!-- templates/sms.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+</head>
+<body>
+<h1>SMS Dashboard</h1>
+
+<h2>Send SMS</h2>
+<form action="/sms/send" method="POST">
+    <label for="to">To:</label>
+    <input type="tel" id="to" name="to" required>
+
+    <label for="body">Message:</label>
+    <textarea id="body" name="body" required></textarea>
+
+    <button type="submit">Send SMS</button>
+</form>
+
+<h2>Recent Messages</h2>
+<table>
+    <thead>
+    <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Body</th>
+        <th>Date Sent</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Messages}}
+    <tr>
+        <td>{{.From}}</td>
+        <td>{{.To}}</td>
+        <td>{{.Body}}</td>
+        <td>{{.DateSent}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+
+<button hx-get="/sms" hx-target="body" hx-swap="outerHTML">Refresh Messages</button>
+
+<a href="/">Back to Home</a>
+</body>
+</html>
